@@ -1,0 +1,77 @@
+datasource:
+  connections:
+    -
+        type: "mysql"
+        name: "mysql database"
+        driver: "com.mysql.cj.jdbc.Driver"
+        host: "localhost"
+        port: "3306"
+        user: "root"
+        password: "example"
+        database: "test"
+        tables:
+            - example
+    -
+        type: "postgre"
+        name: "postgre database"
+        driver: "org.postgresql.Driver"
+        host: "localhost"
+        port: "5432"
+        user: "postgres"
+        password: "example"
+        database: "test.test"
+        tables:
+            - example
+    -
+        type: "mongodb"
+        name: "mongo database"
+        host: "localhost"
+        port: "27017"
+        user: "root"
+        password: "example"
+        database: "test"
+        collections:
+          - example_1
+
+transformations:
+  from:
+    - connection_name: "mysql database1"
+      table: "directors"
+      columns:
+        - name
+        - age
+        - address
+      filters:
+        and:
+          - name = Thiago
+          - age >= 15
+        or:
+          - name = Thiago
+          - age >= 30
+    - connection_name: "mysql database2"
+      table: "movies"
+      columns:
+        - name
+        - age
+        - address
+      filters:
+        and:
+          - name
+          - age >= 15
+        or:
+          - name == Ana
+          - age < 28
+
+datasink:
+  connections:
+      -
+        type: "mysql"
+        name: "mysqlNewDatabase"
+        driver: "com.mysql.cj.jdbc.Driver"
+        host: "localhost"
+        port: "3306"
+        user: "root"
+        password: "example"
+        database: "spark_example"
+        tables:
+            - new_example_1

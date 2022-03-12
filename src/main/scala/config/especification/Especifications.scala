@@ -1,7 +1,7 @@
 package config.especification
 
 import config.data.Data
-import config.selection.Transformations
+import config.transformations.Transformations
 
 import scala.beans.BeanProperty
 

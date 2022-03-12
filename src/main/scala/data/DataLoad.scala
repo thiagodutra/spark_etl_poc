@@ -7,6 +7,9 @@ import scala.collection.mutable
 
 trait DataLoad {
 
-  def loadData(session: SparkSession, config: Especifications): mutable.Map[String, Dataset[Row]]
-
+  def loadData(
+                session: SparkSession,
+                config: Especifications,
+                globalMap:collection.mutable.HashMap[String, Dataset[Row]]
+              ): mutable.Map[String, Dataset[Row]]
 }

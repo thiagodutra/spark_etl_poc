@@ -14,19 +14,25 @@ import scala.collection.mutable
 
 case class MongoDataLoader() extends DataLoad {
 
-  override def loadData(session: SparkSession, config: Especifications): mutable.HashMap[String, Dataset[Row]] = {
-    val collectionsMap = new collection.mutable.HashMap[String, Dataset[Row]]
+  override def loadData(
+                         session: SparkSession,
+                         config: Especifications,
+                         globalTableMap: collection.mutable.HashMap[String, Dataset[Row]]
+                       ): mutable.HashMap[String, Dataset[Row]] = {
+
+    val collectionsMap = globalTableMap
 
     val noSqlConnections = config.datasource.connections
       .filter(connectionType => ConnectionUtils.isMongoConnection(connectionType.`type`))
 
-    noSqlConnections.foreach( connection =>
-      connection.collections.foreach ( collection => {
-        val uniqueKey = createUniqueTableName(connection.name, collection)
-        val dataset = getCollections(session, connection, collection)
-        collectionsMap.put(uniqueKey, dataset)
-      }))
-
+    if (noSqlConnections.nonEmpty) {
+      noSqlConnections.foreach( connection =>
+        connection.collections.foreach ( collection => {
+          val uniqueKey = createUniqueTableName(connection.name, collection)
+          val dataset = getCollections(session, connection, collection)
+          collectionsMap.put(uniqueKey, dataset)
+        }))
+    }
     collectionsMap
   }
 

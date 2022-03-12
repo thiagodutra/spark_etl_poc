@@ -12,19 +12,25 @@ import scala.collection.mutable
 
 case class RelationalDataLoader() extends DataLoad {
 
-  override def loadData(session: SparkSession, config: Especifications): mutable.Map[String, Dataset[Row]] = {
-    val collectionsMap = new collection.mutable.HashMap[String, Dataset[Row]]
+  override def loadData(
+                         session: SparkSession,
+                         config: Especifications,
+                         globalTableMap: collection.mutable.HashMap[String, Dataset[Row]]
+                       ): mutable.Map[String, Dataset[Row]] = {
+
+    val collectionsMap = globalTableMap
 
     val relationalConnections = config.datasource.connections
       .filter(connectionType => ConnectionUtils.isRelationalConnection(connectionType.`type`))
 
-    relationalConnections.foreach( connection =>
-      connection.tables.foreach ( table => {
-        val uniqueKey = createUniqueTableName(connection.name, table)
-        val dataset = getTables(session, connection, table)
-        collectionsMap.put(uniqueKey, dataset)
-      }))
-
+    if (relationalConnections.nonEmpty) {
+      relationalConnections.foreach( connection =>
+        connection.tables.foreach ( table => {
+          val uniqueKey = createUniqueTableName(connection.name, table)
+          val dataset = getTables(session, connection, table)
+          collectionsMap.put(uniqueKey, dataset)
+        }))
+    }
     collectionsMap
   }
 

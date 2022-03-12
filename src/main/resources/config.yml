@@ -1,3 +1,4 @@
+
 datasource:
   connections:
     -
@@ -43,11 +44,12 @@ transformations:
         - address
       filters:
         and:
-          - name = Thiago
+          - movie = Thiago
           - age >= 15
         or:
           - name = Thiago
           - age >= 30
+
     - connection_name: "mysql database2"
       table: "movies"
       columns:
@@ -62,6 +64,18 @@ transformations:
           - name == Ana
           - age < 28
 
+  join:
+    -
+      column: "name"
+      new_table: "new_table1"
+      tables:
+        - connection_name: "mysql database2"
+          table: "movies"
+        - connection_name: "mysql database2"
+          table: "directors"
+        - connection_name: "mysql database2"
+          table: "rating"
+
 datasink:
   connections:
       -
@@ -74,4 +88,5 @@ datasink:
         password: "example"
         database: "spark_example"
         tables:
-            - new_example_1
+            - new_table1
+            - movies_directors_rating

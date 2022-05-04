@@ -8,6 +8,7 @@ class DataSelect {
   @BeanProperty var table = new String()
   @BeanProperty var columns = new java.util.ArrayList[String]()
   @BeanProperty var filters = new Filters()
+  @BeanProperty var new_name = new String();
 
 }
 

@@ -12,7 +12,10 @@ import scala.collection.convert.ImplicitConversions.`iterable AsScalaIterable`
 import scala.collection.mutable
 
 case class RelationalDataSink() extends DataSink {
-  override def sinkData(session: SparkSession, config: Especifications, tables: mutable.Map[String, Dataset[Row]]): Unit = {
+  override def sinkData(
+                         session: SparkSession,
+                         config: Especifications,
+                         tables: mutable.Map[String, Dataset[Row]]): Unit = {
     val sink = config.datasink.connections
       .filter(connectionType => ConnectionUtils.isRelationalConnection(connectionType.`type`))
 

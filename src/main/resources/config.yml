@@ -3,7 +3,7 @@ datasource:
   connections:
     -
         type: "mysql"
-        name: "mysql database"
+        name: "mysql_movies"
         driver: "com.mysql.cj.jdbc.Driver"
         host: "localhost"
         port: "3306"
@@ -11,70 +11,77 @@ datasource:
         password: "example"
         database: "test"
         tables:
-            - example
+            - movies
     -
-        type: "postgre"
-        name: "postgre database"
+        type: "postgres"
+        name: "postgres_directors"
         driver: "org.postgresql.Driver"
         host: "localhost"
         port: "5432"
         user: "postgres"
         password: "example"
-        database: "test.test"
+        database: "test"
         tables:
-            - example
+            - test.directors
     -
         type: "mongodb"
-        name: "mongo database"
+        name: "mongo_imdb"
         host: "localhost"
         port: "27017"
         user: "root"
         password: "example"
-        database: "test"
+        database: "etl_test"
         collections:
-          - example_1
+          - imdb
 
 transformations:
   from:
-    - connection_name: "mysql database1"
+    - connection_name: "mysql_movies"
+      table: "movies"
+      columns:
+        - vote_average
+        - original_title
+        - director_id
+      filters:
+        and:
+          - vote_average > 7
+#        or:
+#          - name = Thiago
+#          - age >= 30
+      new_name: movies
+
+    - connection_name: "postgres_directors"
       table: "directors"
       columns:
         - name
-        - age
-        - address
-      filters:
-        and:
-          - movie = Thiago
-          - age >= 15
-        or:
-          - name = Thiago
-          - age >= 30
-
-    - connection_name: "mysql database2"
-      table: "movies"
-      columns:
-        - name
-        - age
-        - address
-      filters:
-        and:
-          - name
-          - age >= 15
-        or:
-          - name == Ana
-          - age < 28
+        - id as director_id
+#      filters:
+#        and:
+#
+#        or:
+      new_name: directors
 
   join:
     -
-      column: "name"
-      new_table: "new_table1"
+      column: "director_id"
+      new_name: "new_table_test"
       tables:
-        - connection_name: "mysql database2"
+        - connection_name: "mysql_movies"
           table: "movies"
-        - connection_name: "mysql database2"
+        - connection_name: "postgres_directors"
           table: "directors"
-        - connection_name: "mysql database2"
-          table: "rating"
+
+  aggregation:
+    -
+      table: "directors"
+      group_by: column_name
+      count: true/false
+      mean: column_name
+      max: column_name
+      min: column_name
+      sum: column_name
+      avg: column_name
+
 
 datasink:
   connections:
@@ -88,5 +95,5 @@ datasink:
         password: "example"
         database: "spark_example"
         tables:
-            - new_table1
+            - new_table_test
             - movies_directors_rating

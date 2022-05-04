@@ -23,8 +23,6 @@ object Main extends App {
       configFile).select(), configFile)
     .join()
 
-  RelationalDataSink().sinkData(spark,configFile, globalTablesMap)
-
 
   spark.stop()
   

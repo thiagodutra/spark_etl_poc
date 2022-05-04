@@ -3,7 +3,7 @@ package data.relational
 import config.connection.ConnectionConfig
 import config.especification.Especifications
 import data.DataLoad
-import org.apache.spark.sql.{DataFrame, Dataset, Row, SparkSession}
+import org.apache.spark.sql.{Dataset, Row, SparkSession}
 import utils.ConnectionUtils
 import utils.DataUtils.createUniqueTableName
 
@@ -60,13 +60,13 @@ object RelationalDbTypes extends Enumeration {
   type DB = Value
   val MySQL: RelationalDbTypes.Value = Value(1, "mysql")
   val Postgre: RelationalDbTypes.Value = Value(2, "postgre")
-  //Remover singular
+  //Remove singular
   val Postgres: RelationalDbTypes.Value = Value(3, "postgres")
-  //Adiconar oracle
+  //Add Oracle
 }
 
 object RelationalConstants {
-  var DBTYPES = Seq("mysql", "postgre")
+  var DBTYPES = Seq("mysql", "postgre", "postgres")
   var FORMAT = "jdbc"
   var URL = "url"
   var TABLE = "dbtable"

@@ -47,7 +47,7 @@ case class MongoDataLoader() extends DataLoad {
   }
 
   private def getConnectionUrl(collection: String, config: ConnectionConfig): String = {
-    s"mongodb://${config.host}/${config.database}.$collection"
+    s"mongodb://${config.user}:${config.password}@${config.host}/${config.database}.$collection?authSource=admin"
   }
 
   private def createUniqueTableName(connectionName: String, collection: String) = {

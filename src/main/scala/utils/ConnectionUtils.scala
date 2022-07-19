@@ -1,10 +1,15 @@
 package utils
 
 import config.connection.ConnectionConfig
+import data.csv.CSVConstants
 import data.nosql.MongoConstants
 import data.relational.{RelationalConstants, RelationalDbTypes}
 
 object ConnectionUtils {
+
+  def isCSVConnection(connectionType: String): Boolean = connectionType match {
+    case connectionType => CSVConstants.CSVTYPE.contains(connectionType)
+  }
 
   def isRelationalConnection(connectionType: String): Boolean = connectionType match {
     case connectionType => RelationalConstants.DBTYPES.contains(connectionType)

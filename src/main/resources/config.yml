@@ -33,6 +33,11 @@ datasource:
         database: "etl_test"
         collections:
           - imdb
+    -
+        type: "csv"
+        name: "csv_example"
+        path: "c:/my_csv_file.csv"
+        delimiter: ","
 
 transformations:
   from:

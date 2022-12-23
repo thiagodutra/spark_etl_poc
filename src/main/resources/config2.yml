@@ -1,0 +1,104 @@
+
+datasource:
+  connections:
+    -
+        type: "mysql"
+        name: "mysql_movies"
+        driver: "com.mysql.cj.jdbc.Driver"
+        host: "localhost"
+        port: "3306"
+        user: "root"
+        password: "example"
+        database: "test"
+        tables:
+            - movies
+    -
+        type: "postgres"
+        name: "postgres_directors"
+        driver: "org.postgresql.Driver"
+        host: "localhost"
+        port: "5432"
+        user: "postgres"
+        password: "example"
+        database: "test"
+        tables:
+            - test.directors
+    -
+        type: "mongodb"
+        name: "mongo_imdb"
+        host: "localhost"
+        port: "27017"
+        user: "root"
+        password: "example"
+        database: "etl_test"
+        collections:
+          - imdb
+    -
+        type: "csv"
+        name: "csv_example"
+        path: "c:/my_csv_file.csv"
+        delimiter: ","
+
+transformations:
+  from:
+    - connection_name: "mysql_movies"
+      table: "movies"
+      columns:
+        - vote_average
+        - original_title
+        - director_id
+      filters:
+        and:
+          - vote_average > 7
+#        or:
+#          - name = Thiago
+#          - age >= 30
+      new_name: movies
+
+    - connection_name: "postgres_directors"
+      table: "directors"
+      columns:
+        - name
+        - id as director_id
+#      filters:
+#        and:
+#
+#        or:
+      new_name: directors
+
+  join:
+    -
+      column: "director_id"
+      new_name: "new_table_test"
+      tables:
+        - connection_name: "mysql_movies"
+          table: "movies"
+        - connection_name: "postgres_directors"
+          table: "directors"
+
+  aggregation:
+    -
+      table: "directors"
+      group_by: column_name
+      count: true/false
+      mean: column_name
+      max: column_name
+      min: column_name
+      sum: column_name
+      avg: column_name
+
+
+datasink:
+  connections:
+      -
+        type: "mysql"
+        name: "mysqlNewDatabase"
+        driver: "com.mysql.cj.jdbc.Driver"
+        host: "localhost"
+        port: "3306"
+        user: "root"
+        password: "example"
+        database: "spark_example"
+        tables:
+            - new_table_test
+            - movies_directors_rating

@@ -3,7 +3,8 @@ package data.relational
 import config.connection.ConnectionConfig
 import config.especification.Especifications
 import data.DataSink
-import data.relational.DatasinkContants.{DRIVER, PASSWORD, USER}
+import data.relational.DatasinkConstants.{DRIVER, PASSWORD, USER}
+import org.apache.hadoop.shaded.org.eclipse.jetty.websocket.common.frames.DataFrame
 import org.apache.spark.sql.{Dataset, Row, SparkSession}
 import utils.ConnectionUtils
 
@@ -19,7 +20,7 @@ case class RelationalDataSink() extends DataSink {
     val sink = config.datasink.connections
       .filter(connectionType => ConnectionUtils.isRelationalConnection(connectionType.`type`))
 
-    sink.foreach(datasink =>
+      sink.foreach(datasink =>
       datasink.getTables.foreach(table => {
           val sinkUrl = ConnectionUtils.getRelationalConnectionUrl(datasink)
           val sinkProperties = createSinkProperties(datasink)
@@ -36,7 +37,7 @@ case class RelationalDataSink() extends DataSink {
   }
 }
 
-object DatasinkContants {
+object DatasinkConstants {
   val DRIVER = "DRIVER"
   val USER = "USER"
   val PASSWORD = "PASSWORD"

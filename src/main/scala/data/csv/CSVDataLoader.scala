@@ -1,5 +1,6 @@
 package data.csv
 
+import com.typesafe.scalalogging.StrictLogging
 import config.connection.ConnectionConfig
 import config.especification.Especifications
 import data.DataLoad
@@ -11,12 +12,13 @@ import scala.collection.convert.ImplicitConversions.`iterable AsScalaIterable`
 import scala.collection.mutable
 import scala.reflect.io.File
 
-class CSVDataLoader extends DataLoad {
+case class CSVDataLoader() extends DataLoad with StrictLogging {
   override def loadData(
                          session: SparkSession,
                          config: Especifications,
                          globalMap: mutable.HashMap[String, Dataset[Row]]
                        ): mutable.Map[String, Dataset[Row]] = {
+
 
     val collectionsMap = globalMap
 
@@ -25,11 +27,11 @@ class CSVDataLoader extends DataLoad {
 
     if (csvConnection.nonEmpty) {
       csvConnection.foreach(csvConnection => {
+        logger.info(s"Starting to import CSV file on ${csvConnection.path}")
         val uniqueKey = createUniqueTableName(csvConnection.name, CSVConstants.CSVTYPE)
         val dataset = loadCsvData(session, csvConnection)
         collectionsMap.put(uniqueKey, dataset)
-      }
-      )
+      })
     }
     collectionsMap
   }

@@ -27,7 +27,6 @@ case class JoinTables(tablesMap: mutable.Map[String, Dataset[Row]], config: Espe
         }
         tablesMap.put(join.new_name, joinedTables)
       })
-
     }
     tablesMap
   }

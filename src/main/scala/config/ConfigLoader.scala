@@ -6,7 +6,7 @@ import org.yaml.snakeyaml.constructor.Constructor
 
 import java.io.{File, FileInputStream}
 
-object ConfigFile {
+object ConfigLoader {
   def loadConfigFile(path: String): Especifications = {
     val inputStream = new FileInputStream(new File(path))
     val yaml = new Yaml(new Constructor(classOf[Especifications]))
